@@ -19,9 +19,10 @@ const contentSchema = joi.object({
     title:joi.string().required(),
     category:joi.string().required(),
     price:joi.string().required(),
-    tags: joi.array().required(),
+    tags: joi.array().items(joi.string().required()).optional(),
     difficulty: joi.string().optional(),
     targetAudience: joi.string().optional(),
+    status:joi.string().required(),
     contentType:joi.string().required()
 });
 const contentListSchema = joi.object({

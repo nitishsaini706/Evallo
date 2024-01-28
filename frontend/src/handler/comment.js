@@ -15,7 +15,7 @@ const addComment = async (body, token) => {
 const getComments = async (id, token) => {
     try {
         const response = await axios.get(`${API_URL}/${id}`, { headers: { Authorization: token } });
-        return response;
+        return response.data;
     } catch (error) {
         // Handle error
         console.error("Error adding contents", error);

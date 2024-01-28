@@ -311,7 +311,7 @@ const AdminPanel = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {contents?.map((content, index) => (
+                        {contents?.length && contents?.map((content, index) => (
                             <TableRow key={index}>
                                 <TableCell component="th" scope="row">
                                     {content.title}

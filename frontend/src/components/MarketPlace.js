@@ -77,15 +77,20 @@ const Marketplace = () => {
     
     const handleOpenPreview = (content) => {
         setSelectedContentForPreview(content);
-        setPreviewOpen(true);
         setNewComment("");
         fetchComments(content._id);
+        setPreviewOpen(true);
     };
 
     const fetchComments = async (contentId) => {
-        
-        const fetchedComments = await CommentService.getComments(contentId, token);
-        setComments(fetchedComments.data);
+        try {
+            const fetchedComments = await CommentService.getComments(contentId, token);
+            if (fetchedComments){
+                setComments(fetchedComments);
+            }
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+        }
     };
     const handleClosePreview = () => {
         setPreviewOpen(false);
@@ -125,7 +130,6 @@ const Marketplace = () => {
         fetchData();
     }, []);
     const renderContentPreview = (content) => {
-        
         switch (content.contentType) {
             case 'test':
                 return (
@@ -133,24 +137,22 @@ const Marketplace = () => {
                         <Typography variant="h5">{content.title}</Typography>
                         <Typography variant="body1">Difficulty: {content.difficulty}</Typography>
                         <Typography variant="body1">Audience: {content.targetAudience}</Typography>
-                        <Typography variant="body1">Tags: {content.tags.map((tag) => (
-                            <Chip
-                                key={tag}
-                                label={tag}
-                            />
-                        ))}</Typography>
+                        <Typography variant="body1">Tags: 
+                            {content.tags.map((item) => {
+                                
+                                return <Chip style={{marginLeft:"3px"}}key={item.key} label={item} />
+                            })}
+    </Typography>
                     </div>
                 );
             case 'worksheet':
                 return (
                     <div>
                         <Typography variant="h5">{content.title}</Typography>
-                        <Typography variant="body1">Tags: {content.tags.map((tag) => (
-                            <Chip
-                                key={tag}
-                                label={tag}
-                            />
-                        ))}</Typography>
+                        <Typography variant="body1">Tags: {content.tags.map((item) => {
+
+                            return <Chip style={{ marginLeft: "3px" }} key={item.key} label={item} />
+                        })}</Typography>
                     </div>
                 );
             default:
@@ -188,20 +190,20 @@ const Marketplace = () => {
             >
                 <div style={getModalStyle()} className={classes.paper}>
                     {selectedContentForPreview && renderContentPreview(selectedContentForPreview)}
-                    
                     <List className={classes.commentList}>
-                        {comments?.length && comments?.map((comment) => (
-                            <ListItem key={comment._id} className={classes.commentListItem}>
+                        {console.log(comments)}
+                        {comments?.length  ? comments?.map((comment) => (
+                            <ListItem key={comment?._id} className={classes.commentListItem}>
                                 <ListItemAvatar>
                                     <Avatar></Avatar>
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary={<Typography variant="body1">{comment.comment}</Typography>}
-                                    secondary={comment?.commentedBy?.name ? `Commented by ${comment.commentedBy.name}` : null}
+                                    primary={<Typography variant="body1">{comment?.comment}</Typography>}
+                                    secondary={comment?.commentedBy?.name ? `Commented by ${comment?.commentedBy?.name}` : null}
                                 
                                 />
                             </ListItem>
-                        ))}
+                        )) : <Typography variant="body1">No Comments</Typography>}
                     </List>
                     <div>
                         <TextField
@@ -250,7 +252,7 @@ const Marketplace = () => {
                 }}
             />
             <Grid container spacing={3}>
-                {contentItems?.map((item, index) => (
+                {contentItems?.length ? contentItems?.map((item, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
                         <Card className={classes.card}>
                             <CardContent>
@@ -264,7 +266,7 @@ const Marketplace = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                ))}
+                )) : <Typography variant="body1">No Content</Typography>}
             </Grid>
         </Container>
     );

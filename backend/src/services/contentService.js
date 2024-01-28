@@ -6,6 +6,7 @@ const addContent = async(input,auth)=>{
             const content = new Content({ ...input, creator: auth._id });
             await content.save();
         }
+        return;
     }catch(e){
         console.log("error in content adding service ",e);
         throw e;

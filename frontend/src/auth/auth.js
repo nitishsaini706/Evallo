@@ -1,7 +1,10 @@
 
 export const isAuthenticated = () => {
     const token = localStorage.getItem('token');
-    return Boolean(token); // Ideally, you'd also check if the token has expired
+    if(token != null){
+        return true;
+    }
+    return false;
 };
 
 export const isAdmin = () => {
