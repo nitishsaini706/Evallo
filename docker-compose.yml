@@ -1,0 +1,27 @@
+version: '3'
+services:
+  backend:
+    build: ./backend 
+    ports:
+      - "5000:5000"
+    links:
+      - mongo
+      - redis
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/assignment
+      - REDIS_URL=redis://redis:6379
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
